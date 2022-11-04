@@ -1,0 +1,19 @@
+> Encrypt usernames and passwords before adding them to the files
+
+> Be able to decrypt the strings that were added to the user and password files
+
+> Encrypt username and password files
+
+> Be able to decrypt these files for use in the program
+
+> Add requirements for passwords such as:
+	> minimum length
+	> Need to use at least one number
+	> Capital letter
+	> Need to use a symbol
+
+> Be able to add contacts
+
+> List contacts
+
+> Send files to contacts securely
