@@ -1,5 +1,6 @@
 import time
 import os
+import contacts
 
 #
 # Dante Suarez
@@ -72,6 +73,11 @@ def loginauth(username, password):
     #open file objects
     user_file = open("users.txt", "r")
     pass_file = open("passwords.txt", "r")
+
+    if(os.stat("users.txt").st_size == 0):
+        print("No users have been registered. Please register a user.\n")
+        print("Exiting...\n")
+        return False
 
     #read first line of username file
     potential_user = user_file.readline()
@@ -185,13 +191,19 @@ def register():
 # User session
 def session(username):
     print("Welcome to your account " + username + "\n")
-    menu = "Options: help | logout\n"
+    menu = "Options: add contact | list contacts | help | logout\n"
     print(menu)
 
     while True:
         option = input(username + " > ")
         if option == "help":
             print(menu)
+        elif option == "add contact":
+            contact_name = input("Full name: ")
+            contact_email = input("Email: ")
+            contacts.add_contact(username, contact_name, contact_email)
+        elif option == "list contacts":
+            contacts.list_contacts(username)
         elif option == "logout":
             print("Logging out, goodbye...")
             break
