@@ -1,6 +1,8 @@
 import time
 import os
 import contacts
+import getpass
+import encryption
 
 #
 # Dante Suarez
@@ -63,12 +65,14 @@ def repeat_user(username):
         if clean_user == '':
             break
 
-
     user_file.close() 
     return True
 
 # Compares password associated with the username to the given password
 def loginauth(username, password):
+
+    encryption.decrypt("users.txt", "filekey.key")
+    encryption.decrypt("passwords.txt", "filekey.key")
 
     #open file objects
     user_file = open("users.txt", "r")
@@ -90,6 +94,7 @@ def loginauth(username, password):
 
     #loop through usernames until username matches
     while(username != clean_user):
+        print("here\n")
         potential_user = user_file.readline()
         clean_user = potential_user[:-1]
         x = x + 1
@@ -106,12 +111,17 @@ def loginauth(username, password):
         print("Success")
         user_file.close()
         pass_file.close()
+        encryption.encrypt("users.txt", "filekey.key")
+        encryption.encrypt("passwords.txt", "filekey.key")
         return True
 
     #if username or password was not found, or the password doesn't match
     #return False
     user_file.close()
     pass_file.close()
+
+    encryption.encrypt("users.txt", "filekey.key")
+    encryption.encrypt("passwords.txt", "filekey.key")
 
     return False
 
@@ -127,7 +137,7 @@ def login():
     
     #gets password, makes sure it isn't blank
     while True:
-        password = input("Password: ")
+        password = getpass.getpass(prompt="Password: ")
         if not len(password) > 0:
             print("Password can't be blank")
         else:
@@ -139,11 +149,42 @@ def login():
     else:
         print("Invalid username or password")
 
+def contains_number(string):
+    return any(char.isdigit() for char in string)
+
+def contains_special(string):
+    special_characters = "!@#$%^&*()-+?_=,<>/"
+
+    return any(char in special_characters for char in string)
+
+def contains_capital(string):
+    return any(char.isupper() for char in string)
+
+def password_requirements(password):
+    if(len(password) <= 11):
+        return False
+    elif(contains_capital(password)) == False:
+        print("No capital in password\n")
+        return False
+    elif(contains_number(password)) == False:
+        print("No number in password\n")
+        return False
+    elif(contains_special(password)) == False:
+        print("No special character in password\n")
+        return False
+    else:
+        return True
+
 # Register
 def register():
+
+    encryption.decrypt("users.txt", "filekey.key")
+    encryption.decrypt("passwords.txt", "filekey.key")
+
     #open files for appending
     user_file = open("users.txt", "a")
     pass_file = open("passwords.txt", "a")
+
 
     #takes email
     while True:
@@ -165,12 +206,22 @@ def register():
 
     #takes new password
     while True:
-        password = input("New password: ")
+        password = getpass.getpass(prompt="New Password: ")
         if not len(password) > 0:
             print("Password can't be blank")
             continue
+
+        if (password_requirements(password)) == False:
+            print("Password must contain the following requirements: \n\n")
+            print("> Must be longer than 11 characters\n")
+            print("> Must contain a capital letter\n")
+            print("> Must contain at least one number\n")
+            print("> Must contain a special character\n\n")
+            print("Available special characters: @#$%^&*()-+?_=,<>/\n\n")
+            continue
         else:
             break
+
     print("Creating account...")
 
     #writes username to file
@@ -181,9 +232,13 @@ def register():
     pass_file.write(password)
     pass_file.write('\n')
 
-    #close file objects 
+    #close file objects
+
     user_file.close()
     pass_file.close()
+
+    encryption.encrypt("users.txt", "filekey.key")
+    encryption.encrypt("passwords.txt", "filekey.key")
 
     time.sleep(1)
     print("Account has been created")

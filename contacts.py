@@ -1,5 +1,6 @@
 import time
 import os
+import encryption
 
 #function to add contact to a user
 def add_contact(user, name, email):
@@ -9,7 +10,12 @@ def add_contact(user, name, email):
 	user = split_user[0]
 
 	#create / open a contact file for the current user
+
+	
 	contact_file = open(user + "_contacts.txt", "a")
+
+	if(os.path.getsize(user + "_contacts.txt") != 0):
+		encryption.decrypt(user + "_contacts.txt", "filekey.key")
 
 	#writes contact name to file
 	contact_file.write(name)
@@ -21,6 +27,7 @@ def add_contact(user, name, email):
 
     #close file object 
 	contact_file.close()
+	encryption.encrypt(user + "_contacts.txt", "filekey.key")
 
 	time.sleep(1)
 	print("Contact has been created")
@@ -35,15 +42,18 @@ def list_contacts(user):
 		print("Contact file for this user does not exist")
 		return
 
+	encryption.decrypt(user + "_contacts.txt", "filekey.key")
 	contact_file = open(user + "_contacts.txt", "r")
 
 	if os.path.getsize(user + "_contacts.txt") == 0:
 		print("User has no contacts. Please create a contact")
 		contact_file.close()
+		encryption.encrypt(user + "_contacts.txt", "filekey.key")
 		return
 	else:
 		file_content = contact_file.read()
 		print(file_content)
 		contact_file.close()
+		encryption.encrypt(user + "_contacts.txt", "filekey.key")
 		return
 
