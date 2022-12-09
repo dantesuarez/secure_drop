@@ -1,6 +1,11 @@
 import os
 import encryption
 
+# This file is for testing purposes only and does not play
+# any role in the final project.  This file is used
+# to decrypt specified files in order to see things
+# such as if data was stored correctly
+
 encryption.decrypt("users.txt", "filekey.key")
 encryption.decrypt("passwords.txt", "filekey.key")
 

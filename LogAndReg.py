@@ -94,7 +94,7 @@ def loginauth(username, password):
 
     #loop through usernames until username matches
     while(username != clean_user):
-        print("here\n")
+        #print("here\n")
         potential_user = user_file.readline()
         clean_user = potential_user[:-1]
         x = x + 1
@@ -149,17 +149,27 @@ def login():
     else:
         print("Invalid username or password")
 
+# Simple funtion that takes a string and will return
+# true if the string contains a number anywhere
 def contains_number(string):
     return any(char.isdigit() for char in string)
 
+# Simple function that returns true if it contains
+# any one of the special characters in the special_characters
+# string
 def contains_special(string):
     special_characters = "!@#$%^&*()-+?_=,<>/"
 
     return any(char in special_characters for char in string)
 
+# Simple function to check if a string contains a capital letter
 def contains_capital(string):
     return any(char.isupper() for char in string)
 
+# Function that verifies our password requirements
+# Checks that the password is longer than 11 chars
+# Checks that it also contains a number, a capital
+# letter, and also a special character
 def password_requirements(password):
     if(len(password) <= 11):
         return False
@@ -175,7 +185,7 @@ def password_requirements(password):
     else:
         return True
 
-# Register
+# Register user
 def register():
 
     encryption.decrypt("users.txt", "filekey.key")
@@ -207,10 +217,13 @@ def register():
     #takes new password
     while True:
         password = getpass.getpass(prompt="New Password: ")
+
+        # Make sure password was not left blank
         if not len(password) > 0:
             print("Password can't be blank")
             continue
 
+        # Checks password requirements
         if (password_requirements(password)) == False:
             print("Password must contain the following requirements: \n\n")
             print("> Must be longer than 11 characters\n")
@@ -249,6 +262,11 @@ def session(username):
     menu = "Options: add contact | list contacts | help | logout\n"
     print(menu)
 
+    # Main menu with options:
+    # > help -- lists commands
+    # > add contact -- adds contact to user
+    # > list contacts -- lists users contacts
+    # > logout -- logs out of user and drops back to start menu
     while True:
         option = input(username + " > ")
         if option == "help":
@@ -270,7 +288,7 @@ def session(username):
 
 # ON START
 print("Welcome to the system. Please register or login.")
-print("Options: register | login | exit")
+print("Options: register | login | help | exit")
 
 while True:
     option = input("> ")
@@ -278,6 +296,9 @@ while True:
         login()
     elif option == "register":
         register()
+    elif option == "help":
+        print("Options: register | login | help | exit\n")
+        continue
     elif option == "exit":
         break
     else:
